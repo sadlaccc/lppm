@@ -103,8 +103,7 @@ with tabs[2]:
         # Add Error Rate vs k Graph
         st.subheader("Expected Error Rate vs Number of Dummy Locations (k-1)")
         k_values = list(range(2, 11))  # Range of k values (2 to 10)
-        radius = st.slider("Radius for Dummy Locations (in degrees)", min_value=0.001, max_value=0.1, value=0.01)
-
+       
         # Calculate Expected Error Rates for Different k
         error_rates = []
         for k in k_values:
