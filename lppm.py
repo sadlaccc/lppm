@@ -76,14 +76,17 @@ with tabs[2]:
     if uploaded_file is not None and 'dummy_locations' in gowalla_checkins:
         st.write("Simulating trajectory tracking attack...")
 
+        # True and Tracked Trajectory Simulation
         observed_locations = gowalla_checkins['dummy_locations'].iloc[:3].tolist()
         true_trajectory = [(row['latitude'], row['longitude']) for _, row in gowalla_checkins.iloc[:3].iterrows()]
         tracked_trajectory = track_trajectory(observed_locations)
 
+        # Calculate Errors
         errors = [distance(true, tracked) for true, tracked in zip(true_trajectory, tracked_trajectory)]
         avg_error = np.mean(errors)
-        st.write(f"**Average Tracking Error:** {avg_error:.4f}")
+        st.write(f"**Average Tracking Error for Selected Dummy Locations:** {avg_error:.4f}")
 
+        # Plot True vs Tracked Trajectories
         true_lats, true_lons = zip(*true_trajectory)
         tracked_lats, tracked_lons = zip(*tracked_trajectory)
 
@@ -95,4 +98,34 @@ with tabs[2]:
         plt.ylabel("Latitude")
         plt.legend()
         plt.grid()
+        st.pyplot(plt)
+
+        # Add Error Rate vs k Graph
+        st.subheader("Expected Error Rate vs Number of Dummy Locations (k-1)")
+        k_values = list(range(2, 11))  # Range of k values (2 to 10)
+        radius = st.slider("Radius for Dummy Locations (in degrees)", min_value=0.001, max_value=0.1, value=0.01)
+
+        # Calculate Expected Error Rates for Different k
+        error_rates = []
+        for k in k_values:
+            gowalla_checkins['dummy_locations'] = gowalla_checkins.apply(
+                lambda row: generate_dummy_locations(row['latitude'], row['longitude'], k, radius), axis=1
+            )
+            observed_locations = gowalla_checkins['dummy_locations'].iloc[:3].tolist()
+            true_trajectory = [(row['latitude'], row['longitude']) for _, row in gowalla_checkins.iloc[:3].iterrows()]
+            tracked_trajectory = track_trajectory(observed_locations)
+
+            # Calculate average error for this k
+            errors = [distance(true, tracked) for true, tracked in zip(true_trajectory, tracked_trajectory)]
+            avg_error = np.mean(errors)
+            error_rates.append(avg_error)
+
+        # Plot Error Rate vs Number of Dummy Locations
+        plt.figure(figsize=(8, 6))
+        plt.plot(k_values, error_rates, 'b-o', label='Error Rate')
+        plt.title("Expected Error Rate vs Number of Dummy Locations")
+        plt.xlabel("Number of Dummy Locations (k-1)")
+        plt.ylabel("Average Tracking Error")
+        plt.grid()
+        plt.legend()
         st.pyplot(plt)
