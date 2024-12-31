@@ -103,7 +103,7 @@ with tabs[2]:
         # Add Error Rate vs k Graph
         st.subheader("Expected Error Rate vs Number of Dummy Locations (k-1)")
         k_values = list(range(2, 11))  # Range of k values (2 to 10)
-       
+
         # Calculate Expected Error Rates for Different k
         error_rates = []
         for k in k_values:
@@ -124,6 +124,35 @@ with tabs[2]:
         plt.plot(k_values, error_rates, 'b-o', label='Error Rate')
         plt.title("Expected Error Rate vs Number of Dummy Locations")
         plt.xlabel("Number of Dummy Locations (k-1)")
+        plt.ylabel("Average Tracking Error")
+        plt.grid()
+        plt.legend()
+        st.pyplot(plt)
+
+        # Add Error Rate vs Radius Graph
+        st.subheader("Expected Error Rate vs Radius for Dummy Locations")
+        radius_values = [0.001, 0.005, 0.01, 0.05, 0.1]  # Example radius values
+
+        # Calculate Expected Error Rates for Different radius values
+        radius_error_rates = []
+        for radius in radius_values:
+            gowalla_checkins['dummy_locations'] = gowalla_checkins.apply(
+                lambda row: generate_dummy_locations(row['latitude'], row['longitude'], k, radius), axis=1
+            )
+            observed_locations = gowalla_checkins['dummy_locations'].iloc[:3].tolist()
+            true_trajectory = [(row['latitude'], row['longitude']) for _, row in gowalla_checkins.iloc[:3].iterrows()]
+            tracked_trajectory = track_trajectory(observed_locations)
+
+            # Calculate average error for this radius
+            errors = [distance(true, tracked) for true, tracked in zip(true_trajectory, tracked_trajectory)]
+            avg_error = np.mean(errors)
+            radius_error_rates.append(avg_error)
+
+        # Plot Error Rate vs Radius
+        plt.figure(figsize=(8, 6))
+        plt.plot(radius_values, radius_error_rates, 'r-o', label='Error Rate')
+        plt.title("Expected Error Rate vs Radius for Dummy Locations")
+        plt.xlabel("Radius (degrees)")
         plt.ylabel("Average Tracking Error")
         plt.grid()
         plt.legend()
