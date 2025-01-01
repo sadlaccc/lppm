@@ -58,7 +58,7 @@ with tabs[0]:
 with tabs[1]:
     st.header("Step 2: Generate Dummy Locations")
     if uploaded_file is not None:
-        k = st.slider("Number of Locations (1 Real + k-1 Dummy)", min_value=2, max_value=10, value=5)
+        k = st.slider("Number of Locations (1 Real + k-1 Dummy)", min_value=1, max_value=50, value=5)
         radius = st.slider("Radius for Dummy Locations (in degrees)", min_value=0.001, max_value=0.1, value=0.01)
 
         gowalla_checkins['dummy_locations'] = gowalla_checkins.apply(
