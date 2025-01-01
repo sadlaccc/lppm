@@ -102,7 +102,7 @@ with tabs[2]:
 
         # Add Error Rate vs k Graph
         st.subheader("Expected Error Rate vs Number of Dummy Locations (k-1)")
-        k_values = list(range(2, 11))  # Range of k values (2 to 10)
+        k_values = list(range(2, 50))  # Range of k values (2 to 10)
 
         # Calculate Expected Error Rates for Different k
         error_rates = []
