@@ -133,7 +133,7 @@ with tabs[2]:
         st.subheader("Expected Error Rate vs Radius for Dummy Locations")
 
         # Generate up to 12 different radius values using linspace
-        num_points = st.slider("Number of Radius Points", min_value=1, max_value=12, value=12)
+        num_points = st.slider("Number of Radius Points", min_value=1, max_value=50, value=50)
         radius_values = np.linspace(0.001, 0.1, num_points)
 
         # Calculate Expected Error Rates for Different radius values
