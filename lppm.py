@@ -102,7 +102,7 @@ with tabs[2]:
 
         # Add Error Rate vs k Graph
         st.subheader("Expected Error Rate vs Number of Dummy Locations (k-1)")
-        k_values = list(range(2, 50))  # Range of k values (2 to 10)
+        k_values = list(range(2, 5000))  # Range of k values (2 to 10)
 
         # Calculate Expected Error Rates for Different k
         error_rates = []
@@ -133,7 +133,7 @@ with tabs[2]:
         st.subheader("Expected Error Rate vs Radius for Dummy Locations")
 
         # Generate up to 12 different radius values using linspace
-        num_points = st.slider("Number of Radius Points", min_value=1, max_value=50, value=50)
+        num_points = st.slider("Number of Radius Points", min_value=1, max_value=5000, value=5000)
         radius_values = np.linspace(0.001, 0.1, num_points)
 
         # Calculate Expected Error Rates for Different radius values
